@@ -325,6 +325,7 @@ if ($formdata = $mform2->is_cancelled()) {
     $arr_cohort = $DB->get_record('cohort', array('idnumber' =>$cohort1));
             
 		$arr_mkt = $DB->get_record('cohort_makythi', array('examcode' =>$user->makythi,'cohortid' =>$arr_cohort->id));
+		// xét cặp trước khi add user, cặp mã lớp - mã kỳ thi phải tồn tại để add mã thi vào cohort_members
 		if($arr_mkt->id == '')
 		{
 			$upt->track('status', "MÃ£ thi $user->makythi khÃ´ng khá»›p vá»›i lá»›p $cohort1", 'error');
@@ -360,35 +361,52 @@ if ($formdata = $mform2->is_cancelled()) {
                 }
             }
             //
-            if (!isset($user->firstname) or $user->firstname === '') {
+            if (!isset($user->firstname) or $user->firstname === '') { // first name
                 $upt->track('status', get_string('missingfield', 'error', 'firstname'), 'error');
                 $upt->track('firstname', $errorstr, 'error');
                 $error = true;
             }
-            if (!isset($user->lastname) or $user->lastname === '') {
+            if (!isset($user->lastname) or $user->lastname === '') { // last name
                 $upt->track('status', get_string('missingfield', 'error', 'lastname'), 'error');
                 $upt->track('lastname', $errorstr, 'error');
                 $error = true;
             }
             // add ngay / thang / sinh rang BadFunctionCallException
-            if (!isset($user->profile_field_ngaysinh) or $user->profile_field_ngaysinh === '') {
+            if (!isset($user->profile_field_ngaysinh) or $user->profile_field_ngaysinh === '') { // ngày sinh
                 $upt->track('status', get_string('missingfield', 'error', 'profile_field_ngaysinh'), 'error');
                 $upt->track('profile_field_ngaysinh', $errorstr, 'error');
                 $error = true;
             }
-            if (!isset($user->profile_field_thangsinh) or $user->profile_field_thangsinh === '') {
+            if (!isset($user->profile_field_thangsinh) or $user->profile_field_thangsinh === '') { // tháng sinh
                 $upt->track('status', get_string('missingfield', 'error', 'profile_field_thangsinh'), 'error');
                 $upt->track('profile_field_thangsinh', $errorstr, 'error');
                 $error = true;
             }
-            if (!isset($user->profile_field_namsinh) or $user->profile_field_namsinh === '') {
+            if (!isset($user->profile_field_namsinh) or $user->profile_field_namsinh === '') { // năm sinh
                 $upt->track('status', get_string('missingfield', 'error', 'profile_field_namsinh'), 'error');
                 $upt->track('profile_field_namsinh', $errorstr, 'error');
                 $error = true;
             }
+		//
+		if (!isset($user->profile_field_gioitinh) or $user->profile_field_gioitinh === '') { // giới tính
+                $upt->track('status', get_string('missingfield', 'error', 'profile_field_gioitinh'), 'error');
+                $upt->track('profile_field_gioitinh', $errorstr, 'error');
+                $error = true;
+            }
             //
+		 if (!isset($user->profile_field_ngaycapcmtnd) or $user->profile_field_ngaycapcmtnd === '') { // ngày cấp cmtnd
+                $upt->track('status', get_string('missingfield', 'error', 'profile_field_ngaycapcmtnd'), 'error');
+                $upt->track('profile_field_ngaycapcmtnd', $errorstr, 'error');
+                $error = true;
+            }
+		//
+		 if (!isset($user->profile_field_noicapcmtnd) or $user->profile_field_noicapcmtnd === '') { // nơi cấp cmtnd
+                $upt->track('status', get_string('missingfield', 'error', 'profile_field_noicapcmtnd'), 'error');
+                $upt->track('profile_field_noicapcmtnd', $errorstr, 'error');
+                $error = true;
+            }
             // add so dien thoai rang BadFunctionCallException
-            if (!isset($user->phone1) or $user->phone1 === '') {
+            if (!isset($user->phone1) or $user->phone1 === '') { // số điện thoại
                 $upt->track('status', get_string('missingfield', 'error', 'phone1'), 'error');
                 $upt->track('phone1', $errorstr, 'error');
                 $error = true;
@@ -414,42 +432,42 @@ if ($formdata = $mform2->is_cancelled()) {
 
         // cap nhat user, in them bao loi neu rang buoc EmptyIterator
         if (empty($user->firstname)) {
-            $upt->track('status', 'It seems you have forgot your firstname', 'error');
+            $upt->track('status', 'It seems you have forgot your firstname', 'error'); //Tên đầu
             $upt->track('firstname', $errorstr, 'error');
             $userserrors++;
             continue;
         }
         if (empty($user->lastname)) {
-            $upt->track('status', 'It seems you have forgot your lastname', 'error');
+            $upt->track('status', 'It seems you have forgot your lastname', 'error'); // Tên họ
             $upt->track('lastname', $errorstr, 'error');
             $userserrors++;
             continue;
         }
         if (empty($user->profile_field_ngaysinh)) {
-            $upt->track('status', 'Báº¡n Ä‘ang Ä‘á»ƒ trá»‘ng ngÃ y sinhh', 'error');
+            $upt->track('status', 'Báº¡n Ä‘ang Ä‘á»ƒ trá»‘ng ngÃ y sinhh', 'error'); // ngày sinh ( cập nhật )
             $upt->track('profile_field_ngaysinh', $errorstr, 'error');
             $userserrors++;
             continue;
         }
         if (empty($user->profile_field_thangsinh)) {
-            $upt->track('status', 'Báº¡n Ä‘ang Ä‘á»ƒ trá»‘ng thÃ¡ng sinh', 'error');
+            $upt->track('status', 'Báº¡n Ä‘ang Ä‘á»ƒ trá»‘ng thÃ¡ng sinh', 'error'); // tháng sinh ( cập nhật )
             $upt->track('profile_field_thangsinh', $errorstr, 'error');
             $userserrors++;
             continue;
         }
         if (empty($user->profile_field_namsinh)) {
-            $upt->track('status', 'Báº¡n Ä‘ang Ä‘á»ƒ trá»‘ng nÄƒm sinh', 'error');
+            $upt->track('status', 'Báº¡n Ä‘ang Ä‘á»ƒ trá»‘ng nÄƒm sinh', 'error'); // năm sinh ( cập nhật )
             $upt->track('profile_field_namsinh', $errorstr, 'error');
             $userserrors++;
             continue;
         }
-        if (empty($user->profile_field_cmtnd)) {
+        if (empty($user->profile_field_cmtnd)) { // cmtnd - username ( cập nhật )
             $upt->track('status', 'It seems you have forgot your cmtnd', 'error');
             $upt->track('profile_field_cmtnd', $errorstr, 'error');
             $userserrors++;
             continue;
         }
-        if (empty($user->phone1)) {
+        if (empty($user->phone1)) { // số điện thoại ( cập nhật )
             $upt->track('status', 'Báº¡n Ä‘ang Ä‘á»ƒ trá»‘ng sá»‘ Ä‘iá»‡n thoáº¡i', 'error');
             $upt->track('phone1', $errorstr, 'error');
             $userserrors++;
